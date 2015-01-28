@@ -31,6 +31,13 @@
   (interactive)
   (dired "/timand@webdev2.med.upenn.edu:~"))
 
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; ruby things
+(require 'flymake-ruby)
+(add-hook 'ruby-mode-hook 'flymake-ruby-load)
+;;(push 'company-robe company-backends)
+
 ;; hopefully a better ido
 ;;(require 'flx-ido)
 ;;(ido-mode 1)
@@ -52,7 +59,6 @@
 (add-to-list 'auto-mode-alist '("\\.phl\\'" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.inc\\'" . php-mode))
 
-(add-hook 'after-init-hook 'global-company-mode)
 ;;(projectile-global-mode)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
@@ -75,6 +81,7 @@
  '(dired-use-ls-dired nil)
  '(fringe-mode (quote (nil . 0)) nil (fringe))
  '(indent-tabs-mode nil)
+ '(magit-use-overlays nil)
  '(package-archives
    (quote
     (("gnu" . "http://elpa.gnu.org/packages/")
@@ -86,6 +93,8 @@
  '(save-place t nil (saveplace))
  '(savehist-mode t)
  '(show-paren-mode t)
+ '(sr-speedbar-delete-windows t)
+ '(sr-speedbar-right-side nil)
  '(tool-bar-mode nil)
  '(tramp-auto-save-directory "~/.saves")
  '(truncate-lines t))
