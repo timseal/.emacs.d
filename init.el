@@ -5,7 +5,6 @@
 ;(sml/setup)
 ;(sml/apply-theme 'automatic)
 
-(setq paradox-github-token "9d96b7cfe873dd55fb1eed7c8bdef62459ddbd28")
 
 ;(require 'smooth-scrolling)
 (global-linum-mode 1)
@@ -98,6 +97,10 @@
  '(indent-tabs-mode nil)
  '(js-indent-level 2)
  '(magit-use-overlays nil)
+ '(org-agenda-files (quote ("~/orgmode/worklog.org")))
+ '(org-directory "~/Dropbox/orgmode")
+ '(org-mobile-directory "~/Dropbox/orgmode")
+ '(org-mobile-inbox-for-pull "~/orgmode/from-mobile.org")
  '(package-archives
    (quote
     (("gnu" . "http://elpa.gnu.org/packages/")
