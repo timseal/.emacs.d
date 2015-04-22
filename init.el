@@ -1,10 +1,39 @@
+;;; init.el --- user init file      -*- no-byte-compile: t -*-
 
-;;(load-theme 'solarized-light t)
+(setq load-prefer-newer t)
+
+(let* ((my-lisp-dir "~/.emacs.d/elpa/")
+       (default-directory my-lisp-dir)
+       (orig-load-path load-path))
+  (setq load-path (cons my-lisp-dir nil))
+  (normal-top-level-add-subdirs-to-load-path)
+  (nconc load-path orig-load-path))
+
+(require 'package)
+(setq package-enable-at-startup nil)
+(package-initialize)
+
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("org" . "http://orgmode.org/elpa/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+
+(require 'auto-compile)
+(auto-compile-on-load-mode 1)
+(auto-compile-on-save-mode 1)
+
+(load-theme 'solarized-light t)
 (load-file "~/.emacs.d/minibuf-electric-gnuemacs.el")
+
+;; to show rails log files better
+(require 'tty-format)
 
 ;(sml/setup)
 ;(sml/apply-theme 'automatic)
 
+;; org mode stuff
+;; C-C n to make a Note
+;;(setq org-default-notes-file (concat org-directory "/captured_notes.org"))
+(define-key global-map "\C-cn" 'org-capture)
 
 ;(require 'smooth-scrolling)
 (global-linum-mode 1)
@@ -16,13 +45,6 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq require-final-newline t)
-
-(let* ((my-lisp-dir "~/.emacs.d/elpa/")
-       (default-directory my-lisp-dir)
-       (orig-load-path load-path))
-  (setq load-path (cons my-lisp-dir nil))
-  (normal-top-level-add-subdirs-to-load-path)
-  (nconc load-path orig-load-path))
 
 (setq
    backup-by-copying t      ; don't clobber symlinks
@@ -39,8 +61,8 @@
 
 (add-hook 'after-init-hook 'global-company-mode)
 
-;; This might one day not be annoying
-;;(add-hook 'after-init-hook #'global-flycheck-mode)
+;; flycheck mode was annoying when ruby-lint was there. Not now though
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 
 ;; ruby things
@@ -69,9 +91,12 @@
 (add-to-list 'auto-mode-alist '("\\.phl\\'" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.inc\\'" . php-mode))
 
-;;(projectile-global-mode)
+;; projects and trees
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(projectile-global-mode)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
-
+(setq projectile-switch-project-action 'neotree-projectile-action)
 
 (when (member "Source Code Pro" (font-family-list))
   (set-face-attribute 'default nil :font "Source Code Pro-12"))
@@ -92,21 +117,24 @@
     ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "c5a044ba03d43a725bd79700087dea813abcb6beb6be08c7eb3303ed90782482" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" default)))
  '(dired-use-ls-dired nil)
  '(flycheck-ruby-rubocop-executable "~/.rbenv/shims/rubocop")
- '(flycheck-ruby-rubylint-executable "~/.rbenv/shims/ruby-lint")
+ '(flycheck-ruby-rubylint-executable nil)
  '(fringe-mode (quote (nil . 0)) nil (fringe))
+ '(global-flycheck-mode t nil (flycheck))
  '(indent-tabs-mode nil)
  '(js-indent-level 2)
+ '(magit-diff-options (quote ("--ignore-all-space")))
+ '(magit-highlight-trailing-whitespace nil)
+ '(magit-highlight-whitespace nil)
  '(magit-use-overlays nil)
  '(org-agenda-files (quote ("~/orgmode/worklog.org")))
- '(org-directory "~/Dropbox/orgmode")
+ '(org-capture-templates
+   (quote
+    (("n" "item" item
+      (file "~/orgmode/captured_notes.org")
+      ""))))
  '(org-mobile-directory "~/Dropbox/orgmode")
  '(org-mobile-inbox-for-pull "~/orgmode/from-mobile.org")
- '(package-archives
-   (quote
-    (("gnu" . "http://elpa.gnu.org/packages/")
-     ("melpa" . "http://melpa.org/packages/")
-     ("org" . "http://orgmode.org/elpa/"))))
- '(paradox-automatically-star t)
+ '(paradox-github-token t)
  '(php-file-patterns
    (quote
     ("\\.php[s34]?\\'" "\\.phtml\\'" "\\.inc\\'" "\\.phl\\'")))
@@ -115,9 +143,14 @@
  '(show-paren-mode t)
  '(sr-speedbar-delete-windows t)
  '(sr-speedbar-right-side nil)
+ '(standard-indent 2)
  '(tool-bar-mode nil)
  '(tramp-auto-save-directory "~/.saves")
- '(truncate-lines t))
+ '(truncate-lines t)
+ '(web-mode-attr-indent-offset 2)
+ '(web-mode-code-indent-offset 2)
+ '(web-mode-css-indent-offset 2)
+ '(web-mode-markup-indent-offset 2))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
