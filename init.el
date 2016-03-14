@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+;; c+shift+E in intellij should open with emacsclient.
+(server-start)
+
 (setq ring-bell-function 'ignore)
 (setq load-prefer-newer t)
 
@@ -12,7 +15,7 @@
        (orig-load-path load-path))
   (setq load-path (cons my-lisp-dir nil))
   (normal-top-level-add-subdirs-to-load-path)
-  (nconc load-path orig-load-path))
+  (nconc load-path orig-load-path))m
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -20,7 +23,7 @@
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" . "https://melpa.org/packages/")))
 
 (require 'editorconfig)
 
@@ -108,6 +111,7 @@
    version-control t)       ; use versioned backups
 
 (defun connect-webdev2 ()
+  "Use tramp to get to webdev2."
   (interactive)
   (dired "/timand@webdev2.med.upenn.edu:~"))
 
@@ -122,14 +126,26 @@
 ;;(add-hook 'ruby-mode-hook 'flymake-ruby-load)
 ;;(push 'company-robe company-backends)
 
-;; hopefully a better ido
-;;(require 'flx-ido)
-;;(ido-mode 1)
-;;(ido-everywhere 1)
-;;(flx-ido-mode 1)
-;; disable ido faces to see flx highlights.
-;;(setq ido-enable-flex-matching t)
-;;(setq ido-use-faces nil)
+;;hopefully a better ido
+(require 'flx-ido)
+(ido-mode 1)
+(ido-everywhere 1)
+(flx-ido-mode 1)
+;;disable ido faces to see flx highlights.
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
+
+;; Display ido results vertically, rather than horizontally
+;; https://lorefnon.me/2014/02/02/configuring-emacs-for-rails.html
+(setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+(defun ido-disable-line-truncation () "No docs." (set (make-local-variable 'truncate-lines) nil))
+(add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
+(defun ido-define-keys ()
+  "C - n /p is more intuitive in vertical layout."
+    (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
+    (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))
+(add-hook 'ido-setup-hook 'ido-define-keys)
+
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -187,7 +203,7 @@
  '(cua-normal-cursor-color "#657b83")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
- '(custom-enabled-themes (quote (base16-atelierseaside-light)))
+ '(custom-enabled-themes nil)
  '(custom-safe-themes t)
  '(desktop-save-mode t)
  '(dired-use-ls-dired nil)
@@ -221,7 +237,7 @@
    (quote
     ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
  '(indent-tabs-mode nil)
- '(js-indent-level 2)
+ '(js-indent-level 4)
  '(line-spacing 0.3)
  '(magit-diff-options (quote ("--ignore-all-space")))
  '(magit-diff-use-overlays nil)
