@@ -38,10 +38,10 @@
 ;; tab bar?
 ;; source is under elpa directory, but I git cloned it myself.
 (setq tabbar-ruler-global-tabbar t)    ; get tabbar
-(setq tabbar-ruler-global-ruler t)     ; get global ruler
+(setq tabbar-ruler-global-ruler nil)     ; get global ruler
 (setq tabbar-ruler-popup-menu t)       ; get popup menu.
 (setq tabbar-ruler-popup-toolbar t)    ; get popup toolbar
-(setq tabbar-ruler-popup-scrollbar t)  ; show scroll-bar on mouse-move
+(setq tabbar-ruler-popup-scrollbar nil)  ; show scroll-bar on mouse-move
 (require 'tabbar-ruler)
 
 
@@ -58,8 +58,9 @@
 ;;mode line theming. I don't like anything yet
 ;(sml/setup)
 ;(sml/apply-theme 'automatic)
-;(require 'powerline)
-;(powerline-default-theme)
+(require 'powerline)
+(require 'spaceline-config)
+(spaceline-spacemacs-theme)
 
 
 ;; org mode stuff
@@ -226,7 +227,7 @@
  '(org-mobile-inbox-for-pull "~/orgmode/from-mobile.org")
  '(package-selected-packages
    (quote
-    (bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer powerline php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flymake-ruby flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
+    (spaceline bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer powerline php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flymake-ruby flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
  '(paradox-github-token t)
  '(php-file-patterns
    (quote
