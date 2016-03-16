@@ -15,7 +15,7 @@
        (orig-load-path load-path))
   (setq load-path (cons my-lisp-dir nil))
   (normal-top-level-add-subdirs-to-load-path)
-  (nconc load-path orig-load-path))m
+  (nconc load-path orig-load-path))
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -27,39 +27,6 @@
 
 (require 'editorconfig)
 
-;; Helm
-(require 'helm)
-(require 'helm-config)
-;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-(global-set-key (kbd "C-c h") 'helm-command-prefix)
-(global-unset-key (kbd "C-x c"))
-
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-(when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
-
-(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-      helm-ff-file-name-history-use-recentf t)
-
-;; from https://www.reddit.com/r/emacs/comments/30yer0/helm_and_recentf_tips/
-(define-key helm-map (kbd "C-x b")  'helm-mini)
-(setq helm-mini-default-sources '(helm-source-buffers-list
-                                  helm-source-recentf
-                                  helm-source-bookmarks
-                                  helm-source-buffer-not-found))
-
-(helm-mode 1)
-
-;;;;;;;;
-
 (require 'yasnippet)
 (yas-global-mode 1)
 
@@ -67,14 +34,15 @@
 (auto-compile-on-load-mode 1)
 (auto-compile-on-save-mode 1)
 
-;;(load-theme 'solarized-light t)
-(load-theme 'base16-tomorrow-dark t)
-(load-file "~/.emacs.d/minibuf-electric-gnuemacs.el")
 
 ;; tab bar?
-;;(setq tabbar-ruler-global-tabbar t) ; If you want tabbar
-;;(setq tabbar-ruler-global-ruler t) ; if you want a global ruler
-;;(require 'tabbar-ruler)
+;; source is under elpa directory, but I git cloned it myself.
+(setq tabbar-ruler-global-tabbar t)    ; get tabbar
+(setq tabbar-ruler-global-ruler t)     ; get global ruler
+(setq tabbar-ruler-popup-menu t)       ; get popup menu.
+(setq tabbar-ruler-popup-toolbar t)    ; get popup toolbar
+(setq tabbar-ruler-popup-scrollbar t)  ; show scroll-bar on mouse-move
+(require 'tabbar-ruler)
 
 
 ;; to show rails log files better
@@ -82,8 +50,17 @@
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
+;; Themes n stuff
+;;(load-theme 'solarized-light t)
+(load-theme 'base16-tomorrow-dark t)
+(load-file "~/.emacs.d/minibuf-electric-gnuemacs.el")
+
+;;mode line theming. I don't like anything yet
 ;(sml/setup)
 ;(sml/apply-theme 'automatic)
+;(require 'powerline)
+;(powerline-default-theme)
+
 
 ;; org mode stuff
 ;; C-C n to make a Note
@@ -134,17 +111,8 @@
 ;;disable ido faces to see flx highlights.
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces nil)
-
-;; Display ido results vertically, rather than horizontally
-;; https://lorefnon.me/2014/02/02/configuring-emacs-for-rails.html
-(setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
-(defun ido-disable-line-truncation () "No docs." (set (make-local-variable 'truncate-lines) nil))
-(add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
-(defun ido-define-keys ()
-  "C - n /p is more intuitive in vertical layout."
-    (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
-    (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))
-(add-hook 'ido-setup-hook 'ido-define-keys)
+(require 'ido-vertical-mode)
+(ido-vertical-mode)
 
 
 (require 'web-mode)
@@ -168,6 +136,7 @@
 ;; another option
 ;;(require 'projectile-speedbar)
 
+;; Fonts (use one of the below)
 ;; (when (member "Source Code Pro" (font-family-list))
 ;;   (set-face-attribute 'default nil :font "Source Code Pro-12"))
 
@@ -257,14 +226,14 @@
  '(org-mobile-inbox-for-pull "~/orgmode/from-mobile.org")
  '(package-selected-packages
    (quote
-    (js2-mode paradox helm-dash rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant tabbar-ruler steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer powerline php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line helm-themes helm-projectile helm-orgcard helm-ag guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flymake-ruby flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
+    (bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer powerline php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flymake-ruby flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
  '(paradox-github-token t)
  '(php-file-patterns
    (quote
     ("\\.php[s34]?\\'" "\\.phtml\\'" "\\.inc\\'" "\\.phl\\'")))
  '(pos-tip-background-color "#eee8d5")
  '(pos-tip-foreground-color "#586e75")
- '(projectile-completion-system (quote helm))
+ '(projectile-completion-system (quote ido))
  '(projectile-enable-caching t)
  '(projectile-use-git-grep t)
  '(save-place t nil (saveplace))
