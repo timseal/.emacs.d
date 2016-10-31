@@ -21,6 +21,9 @@
 (setq package-enable-at-startup nil)
 (package-initialize)
 
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")
                          ("melpa" . "https://melpa.org/packages/")))
@@ -34,33 +37,47 @@
 (auto-compile-on-load-mode 1)
 (auto-compile-on-save-mode 1)
 
+;; helm
+(require 'helm)
+(require 'helm-config)
+(global-set-key (kbd "M-x") 'helm-M-x)
+;;(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-f") 'find-file)
+(helm-mode 1)
 
 ;; tab bar?
 ;; source is under elpa directory, but I git cloned it myself.
-(setq tabbar-ruler-global-tabbar t)    ; get tabbar
-(setq tabbar-ruler-global-ruler nil)     ; get global ruler
-(setq tabbar-ruler-popup-menu t)       ; get popup menu.
-(setq tabbar-ruler-popup-toolbar t)    ; get popup toolbar
-(setq tabbar-ruler-popup-scrollbar nil)  ; show scroll-bar on mouse-move
-(require 'tabbar-ruler)
+;; (setq tabbar-ruler-global-tabbar t)    ; get tabbar
+;; (setq tabbar-ruler-global-ruler nil)     ; get global ruler
+;; (setq tabbar-ruler-popup-menu t)       ; get popup menu.
+;; (setq tabbar-ruler-popup-toolbar t)    ; get popup toolbar
+;; (setq tabbar-ruler-popup-scrollbar nil)  ; show scroll-bar on mouse-move
+;; (require 'tabbar-ruler)
 
 
 ;; to show rails log files better
 (require 'tty-format)
 
 (setq magit-last-seen-setup-instructions "1.4.0")
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; Themes n stuff
 ;;(load-theme 'solarized-light t)
-(load-theme 'base16-tomorrow-dark t)
+;;(load-theme 'base16-tomorrow-dark t)
+;;(load-theme 'labburn t)
+(setq custom-safe-themes t)
+(load-theme 'spacemacs-dark)
+
 (load-file "~/.emacs.d/minibuf-electric-gnuemacs.el")
 
 ;;mode line theming. I don't like anything yet
-;(sml/setup)
-;(sml/apply-theme 'automatic)
-(require 'powerline)
+;;(setq sml/no-confirm-load-theme t)
+;;(sml/setup)
+;;(sml/apply-theme 'automatic)
+;;(require 'powerline)
 (require 'spaceline-config)
 (spaceline-spacemacs-theme)
+
 
 
 ;; org mode stuff
@@ -114,6 +131,8 @@
 (setq ido-use-faces nil)
 (require 'ido-vertical-mode)
 (ido-vertical-mode)
+;; Default for ido is C-s amd C-r for prev/next. Vertically this makes no sense, so we want C-n and C-p
+(setq ido-vertical-define-keys 'C-n-and-C-p-only)
 
 
 (require 'web-mode)
@@ -133,7 +152,12 @@
 (global-set-key [f8] 'neotree-toggle)
 (projectile-global-mode)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
-(setq projectile-switch-project-action 'neotree-projectile-action)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+
+;;(setq projectile-switch-project-action 'neotree-projectile-action)
+(setq projectile-switch-project-action 'helm-projectile)
+
 ;; another option
 ;;(require 'projectile-speedbar)
 
@@ -144,8 +168,8 @@
 ;; (when (member "CamingoCode" (font-family-list))
 ;;   (set-face-attribute 'default nil :font "CamingoCode-12"))
 
-;; (when (member "PragmataPro" (font-family-list))
-;;   (set-face-attribute 'default nil :font "PragmataPro-12"))
+(when (member "PragmataPro" (font-family-list))
+  (set-face-attribute 'default nil :font "PragmataPro-14"))
 
 
 ;; javascript stuff
@@ -153,6 +177,9 @@
 (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
 (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))
 
+
+ ;; '(ansi-color-names-vector
+ ;;   (vector "#ffffff" "#ff9da4" "#d1f1a9" "#ffeead" "#bbdaff" "#ebbbff" "#99ffff" "#002451"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -162,7 +189,7 @@
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
-   (vector "#ffffff" "#ff9da4" "#d1f1a9" "#ffeead" "#bbdaff" "#ebbbff" "#99ffff" "#002451"))
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(ansi-term-color-vector
    [unspecified "#000000" "#e92f2f" "#0ed839" "#dddd13" "#3b48e3" "#f996e2" "#3b48e3" "#ababab"] t)
  '(apropos-do-all t)
@@ -173,16 +200,16 @@
  '(cua-normal-cursor-color "#657b83")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
- '(custom-enabled-themes nil)
+ '(custom-enabled-themes (quote (spacemacs-dark)))
  '(custom-safe-themes t)
- '(desktop-save-mode t)
+ '(desktop-save-mode nil)
  '(dired-use-ls-dired nil)
  '(editorconfig-exec-path "/usr/local/bin/editorconfig")
  '(fci-rule-color "#003f8e")
+ '(flycheck-rubocop-lint-only t)
  '(flycheck-ruby-rubocop-executable "~/.rbenv/shims/rubocop")
- '(flycheck-ruby-rubylint-executable nil)
  '(fringe-mode (quote (nil . 0)) nil (fringe))
- '(global-flycheck-mode t)
+ '(global-flycheck-mode nil)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
@@ -209,6 +236,7 @@
  '(indent-tabs-mode nil)
  '(js-indent-level 4)
  '(line-spacing 0.3)
+ '(mac-option-modifier (quote (:ordinary meta :function alt :mouse alt)))
  '(magit-diff-options (quote ("--ignore-all-space")))
  '(magit-diff-use-overlays nil)
  '(magit-highlight-trailing-whitespace nil)
@@ -217,6 +245,9 @@
  '(neo-click-changes-root nil)
  '(neo-cwd-line-style (quote button))
  '(neo-theme (quote nerd))
+ '(nrepl-message-colors
+   (quote
+    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(org-agenda-files (quote ("~/orgmode/worklog.org")))
  '(org-capture-templates
    (quote
@@ -227,7 +258,7 @@
  '(org-mobile-inbox-for-pull "~/orgmode/from-mobile.org")
  '(package-selected-packages
    (quote
-    (spaceline bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer powerline php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flymake-ruby flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
+    (anzu slack spaceline moe-theme smart-mode-line-powerline-theme exec-path-from-shell helm-flycheck osx-plist ruby-refactor spotlight farmhouse-theme majapahit-theme dakrone-theme hydandata-light-theme spacemacs-theme labburn-theme helm-projectile helm-ag helm-descbinds helm-ls-git helm-smex smex async company-statistics dash helm-company hydra rich-minority yasnippet bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
  '(paradox-github-token t)
  '(php-file-patterns
    (quote
@@ -237,10 +268,15 @@
  '(projectile-completion-system (quote ido))
  '(projectile-enable-caching t)
  '(projectile-use-git-grep t)
+ '(rainbow-identifiers-choose-face-function (quote rainbow-identifiers-cie-l*a*b*-choose-face) t)
+ '(rainbow-identifiers-cie-l*a*b*-color-count 1024 t)
+ '(rainbow-identifiers-cie-l*a*b*-lightness 80 t)
+ '(rainbow-identifiers-cie-l*a*b*-saturation 25 t)
  '(save-place t nil (saveplace))
  '(savehist-mode t)
  '(show-paren-mode t)
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
+ '(spaceline-helm-mode t)
  '(sr-speedbar-delete-windows t)
  '(sr-speedbar-right-side nil)
  '(standard-indent 2)
@@ -278,16 +314,26 @@
  '(weechat-color-list
    (quote
     (unspecified "#fdf6e3" "#eee8d5" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#657b83" "#839496")))
+ '(when
+      (or
+       (not
+        (boundp
+         (quote ansi-term-color-vector)))
+       (not
+        (facep
+         (aref ansi-term-color-vector 0)))))
  '(xterm-color-names
    ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
  '(xterm-color-names-bright
    ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
+
+;; '(default ((t (:inherit nil :stipple nil :background "#002451" :foreground "#ffffff" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "PragmataPro"))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#002451" :foreground "#ffffff" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "PragmataPro"))))
  '(neo-banner-face ((t (:foreground "#93a1a1"))))
  '(neo-button-face ((t (:underline nil))))
  '(neo-dir-link-face ((t (:foreground "#268bd2" :height 1.0))))
