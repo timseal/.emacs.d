@@ -37,13 +37,16 @@
 (auto-compile-on-load-mode 1)
 (auto-compile-on-save-mode 1)
 
+(require 'multi-term)
+(setq multi-term-program "/usr/local/bin/bash")
+
 ;; helm
-(require 'helm)
-(require 'helm-config)
-(global-set-key (kbd "M-x") 'helm-M-x)
-;;(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-x C-f") 'find-file)
-(helm-mode 1)
+;; (require 'helm)
+;; (require 'helm-config)
+;; (global-set-key (kbd "M-x") 'helm-M-x)
+;; ;;(global-set-key (kbd "C-x C-f") 'helm-find-files)
+;; (global-set-key (kbd "C-x C-f") 'find-file)
+;; (helm-mode 1)
 
 ;; tab bar?
 ;; source is under elpa directory, but I git cloned it myself.
@@ -152,11 +155,11 @@
 (global-set-key [f8] 'neotree-toggle)
 (projectile-global-mode)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
-(setq projectile-completion-system 'helm)
-(helm-projectile-on)
+;;(setq projectile-completion-system 'helm)
+;;(helm-projectile-on)
 
 ;;(setq projectile-switch-project-action 'neotree-projectile-action)
-(setq projectile-switch-project-action 'helm-projectile)
+;;(setq projectile-switch-project-action 'helm-projectile)
 
 ;; another option
 ;;(require 'projectile-speedbar)
@@ -178,20 +181,17 @@
 (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))
 
 
- ;; '(ansi-color-names-vector
- ;;   (vector "#ffffff" "#ff9da4" "#d1f1a9" "#ffeead" "#bbdaff" "#ebbbff" "#99ffff" "#002451"))
+;;(eval-after-load "sql"
+;;  '(load-library "sql-indent"))
+
+
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(ansi-color-names-vector
-   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
- '(ansi-term-color-vector
-   [unspecified "#000000" "#e92f2f" "#0ed839" "#dddd13" "#3b48e3" "#f996e2" "#3b48e3" "#ababab"] t)
  '(apropos-do-all t)
  '(blink-cursor-mode nil)
  '(column-number-mode t)
@@ -258,7 +258,7 @@
  '(org-mobile-inbox-for-pull "~/orgmode/from-mobile.org")
  '(package-selected-packages
    (quote
-    (anzu slack spaceline moe-theme smart-mode-line-powerline-theme exec-path-from-shell helm-flycheck osx-plist ruby-refactor spotlight farmhouse-theme majapahit-theme dakrone-theme hydandata-light-theme spacemacs-theme labburn-theme helm-projectile helm-ag helm-descbinds helm-ls-git helm-smex smex async company-statistics dash helm-company hydra rich-minority yasnippet bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
+    (sql-indent format-sql sqlup-mode e2ansi multi-term anzu slack spaceline moe-theme smart-mode-line-powerline-theme exec-path-from-shell helm-flycheck osx-plist ruby-refactor spotlight farmhouse-theme majapahit-theme dakrone-theme hydandata-light-theme spacemacs-theme labburn-theme helm-projectile helm-ag helm-descbinds helm-ls-git helm-smex smex async company-statistics dash helm-company hydra rich-minority yasnippet bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
  '(paradox-github-token t)
  '(php-file-patterns
    (quote
@@ -268,10 +268,6 @@
  '(projectile-completion-system (quote ido))
  '(projectile-enable-caching t)
  '(projectile-use-git-grep t)
- '(rainbow-identifiers-choose-face-function (quote rainbow-identifiers-cie-l*a*b*-choose-face) t)
- '(rainbow-identifiers-cie-l*a*b*-color-count 1024 t)
- '(rainbow-identifiers-cie-l*a*b*-lightness 80 t)
- '(rainbow-identifiers-cie-l*a*b*-saturation 25 t)
  '(save-place t nil (saveplace))
  '(savehist-mode t)
  '(show-paren-mode t)
@@ -280,8 +276,6 @@
  '(sr-speedbar-delete-windows t)
  '(sr-speedbar-right-side nil)
  '(standard-indent 2)
- '(term-default-bg-color "#fdf6e3")
- '(term-default-fg-color "#657b83")
  '(tool-bar-mode nil)
  '(tramp-auto-save-directory "~/.saves")
  '(truncate-lines t)
@@ -310,23 +304,7 @@
  '(web-mode-attr-indent-offset 2)
  '(web-mode-code-indent-offset 2)
  '(web-mode-css-indent-offset 2)
- '(web-mode-markup-indent-offset 2)
- '(weechat-color-list
-   (quote
-    (unspecified "#fdf6e3" "#eee8d5" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#657b83" "#839496")))
- '(when
-      (or
-       (not
-        (boundp
-         (quote ansi-term-color-vector)))
-       (not
-        (facep
-         (aref ansi-term-color-vector 0)))))
- '(xterm-color-names
-   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
- '(xterm-color-names-bright
-   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
-
+ '(web-mode-markup-indent-offset 2))
 ;; '(default ((t (:inherit nil :stipple nil :background "#002451" :foreground "#ffffff" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "PragmataPro"))))
 
 (custom-set-faces
@@ -342,3 +320,5 @@
  '(neo-header-face ((t (:foreground "#268bd2"))))
  '(neo-root-dir-face ((t (:foreground "#586e75" :weight bold))))
  '(web-mode-symbol-face ((t (:foreground "gold4")))))
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
