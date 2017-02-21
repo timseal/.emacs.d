@@ -5,10 +5,30 @@
 ;;; Code:
 
 ;; c+shift+E in intellij should open with emacsclient.
-(server-start)
+;;(server-start)
+
+;;; Packages setup
+(require 'package)
+(setq package-enable-at-startup nil)
+(package-initialize)
+
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("org" . "http://orgmode.org/elpa/")
+                         ("melpa" . "https://melpa.org/packages/")))
+
+;; Bootstrap `use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+;;; Packages are now set up!
+
+
+(use-package which-key)
+(which-key-mode)
 
 (setq ring-bell-function 'ignore)
 (setq load-prefer-newer t)
+
 
 (let* ((my-lisp-dir "~/.emacs.d/elpa/")
        (default-directory my-lisp-dir)
@@ -17,16 +37,11 @@
   (normal-top-level-add-subdirs-to-load-path)
   (nconc load-path orig-load-path))
 
-(require 'package)
-(setq package-enable-at-startup nil)
-(package-initialize)
 
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("org" . "http://orgmode.org/elpa/")
-                         ("melpa" . "https://melpa.org/packages/")))
+
 
 (require 'editorconfig)
 
@@ -151,10 +166,15 @@
 (add-to-list 'auto-mode-alist '("\\.inc\\'" . php-mode))
 
 ;; projects and trees
+
+(use-package projectile-rails)
+(projectile-rails-global-mode)
+(setq projectile-enable-caching t)
+
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
-(projectile-global-mode)
-(add-hook 'projectile-mode-hook 'projectile-rails-on)
+;;(projectile-global-mode)
+;;(add-hook 'projectile-mode-hook 'projectile-rails-on)
 ;;(setq projectile-completion-system 'helm)
 ;;(helm-projectile-on)
 
@@ -192,6 +212,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-term-color-vector
+   [unspecified "#061229" "#d07346" "#99bf52" "#fbd461" "#5299bf" "#9989cc" "#5299bf" "#b8bbc2"] t)
  '(apropos-do-all t)
  '(blink-cursor-mode nil)
  '(column-number-mode t)
@@ -200,16 +222,62 @@
  '(cua-normal-cursor-color "#657b83")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
- '(custom-enabled-themes (quote (spacemacs-dark)))
+ '(custom-enabled-themes (quote (sanityinc-tomorrow-blue)))
  '(custom-safe-themes t)
  '(desktop-save-mode nil)
+ '(diary-entry-marker (quote font-lock-variable-name-face))
  '(dired-use-ls-dired nil)
  '(editorconfig-exec-path "/usr/local/bin/editorconfig")
+ '(emms-mode-line-icon-image-cache
+   (quote
+    (image :type xpm :ascent center :data "/* XPM */
+static char *note[] = {
+/* width height num_colors chars_per_pixel */
+\"    10   11        2            1\",
+/* colors */
+\". c #1fb3b3\",
+\"# c None s None\",
+/* pixels */
+\"###...####\",
+\"###.#...##\",
+\"###.###...\",
+\"###.#####.\",
+\"###.#####.\",
+\"#...#####.\",
+\"....#####.\",
+\"#..######.\",
+\"#######...\",
+\"######....\",
+\"#######..#\" };")))
  '(fci-rule-color "#003f8e")
  '(flycheck-rubocop-lint-only t)
  '(flycheck-ruby-rubocop-executable "~/.rbenv/shims/rubocop")
  '(fringe-mode (quote (nil . 0)) nil (fringe))
  '(global-flycheck-mode nil)
+ '(gnus-logo-colors (quote ("#2fdbde" "#c0c0c0")))
+ '(gnus-mode-line-image-cache
+   (quote
+    (image :type xpm :ascent center :data "/* XPM */
+static char *gnus-pointer[] = {
+/* width height num_colors chars_per_pixel */
+\"    18    13        2            1\",
+/* colors */
+\". c #1fb3b3\",
+\"# c None s None\",
+/* pixels */
+\"##################\",
+\"######..##..######\",
+\"#####........#####\",
+\"#.##.##..##...####\",
+\"#...####.###...##.\",
+\"#..###.######.....\",
+\"#####.########...#\",
+\"###########.######\",
+\"####.###.#..######\",
+\"######..###.######\",
+\"###....####.######\",
+\"###..######.######\",
+\"###########.######\" };")))
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
@@ -236,6 +304,7 @@
  '(indent-tabs-mode nil)
  '(js-indent-level 4)
  '(line-spacing 0.3)
+ '(mac-mouse-wheel-smooth-scroll t)
  '(mac-option-modifier (quote (:ordinary meta :function alt :mouse alt)))
  '(magit-diff-options (quote ("--ignore-all-space")))
  '(magit-diff-use-overlays nil)
@@ -258,7 +327,7 @@
  '(org-mobile-inbox-for-pull "~/orgmode/from-mobile.org")
  '(package-selected-packages
    (quote
-    (sql-indent format-sql sqlup-mode e2ansi multi-term anzu slack spaceline moe-theme smart-mode-line-powerline-theme exec-path-from-shell helm-flycheck osx-plist ruby-refactor spotlight farmhouse-theme majapahit-theme dakrone-theme hydandata-light-theme spacemacs-theme labburn-theme helm-projectile helm-ag helm-descbinds helm-ls-git helm-smex smex async company-statistics dash helm-company hydra rich-minority yasnippet bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
+    (which-key use-package el-get alect-themes sql-indent format-sql sqlup-mode e2ansi multi-term anzu slack spaceline moe-theme smart-mode-line-powerline-theme exec-path-from-shell helm-flycheck osx-plist ruby-refactor spotlight farmhouse-theme majapahit-theme dakrone-theme hydandata-light-theme spacemacs-theme labburn-theme helm-projectile helm-ag helm-descbinds helm-ls-git helm-smex smex async company-statistics dash helm-company hydra rich-minority yasnippet bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
  '(paradox-github-token t)
  '(php-file-patterns
    (quote
@@ -312,6 +381,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(linum ((t (:background "#002451" :foreground "#7285b7" :underline nil :slant normal :height 0.8))))
  '(neo-banner-face ((t (:foreground "#93a1a1"))))
  '(neo-button-face ((t (:underline nil))))
  '(neo-dir-link-face ((t (:foreground "#268bd2" :height 1.0))))
