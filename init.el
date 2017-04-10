@@ -7,7 +7,51 @@
 ;; c+shift+E in intellij should open with emacsclient.
 ;;(server-start)
 
-;;; Packages setup
+
+(let* ((my-lisp-dir "~/.emacs.d/elpa/")
+       (default-directory my-lisp-dir)
+       (orig-load-path load-path))
+  (setq load-path (cons my-lisp-dir nil))
+  (normal-top-level-add-subdirs-to-load-path)
+  (nconc load-path orig-load-path))
+
+
+;;;;;;;;;;;;;;;;;;;;;; GENERAL UI AND BASIC EDITING STUFF ;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;  ie basic emacs config only, no packages ;;;;;;;;;;;;;;;;;
+
+(load-file "~/.emacs.d/minibuf-electric-gnuemacs.el")
+
+;(require 'smooth-scrolling)
+(global-linum-mode 1)
+(global-hl-line-mode 1)
+
+(global-visual-line-mode 1)
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq inhibit-startup-message t)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq require-final-newline t)
+
+(setq ring-bell-function 'ignore)
+(setq load-prefer-newer t)
+
+
+
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.saves"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+
+;;;;;;;;;;;;;;;;;;;;;; END OF GENERAL UI AND BASIC EDITING STUFF ;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;  PACKAGES SETUP    ;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'package)
 (setq package-enable-at-startup nil)
 (package-initialize)
@@ -20,31 +64,37 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Packages are now set up!
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Themes n stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;(load-theme 'solarized-light t)
+;;(load-theme 'base16-tomorrow-dark t)
+;;(load-theme 'labburn t)
+(setq custom-safe-themes t)
+;;(load-theme 'spacemacs-dark)
+(load-theme 'pastelmac)
+
+;;mode line theming. I don't like anything yet
+;;(setq sml/no-confirm-load-theme t)
+;;(sml/setup)
+;;(sml/apply-theme 'automatic)
+;;(require 'powerline)
+;;(require 'spaceline-config)
+;;(spaceline-spacemacs-theme)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; various package load and setup
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package which-key)
 (which-key-mode)
 
-(setq ring-bell-function 'ignore)
-(setq load-prefer-newer t)
-
-
-(let* ((my-lisp-dir "~/.emacs.d/elpa/")
-       (default-directory my-lisp-dir)
-       (orig-load-path load-path))
-  (setq load-path (cons my-lisp-dir nil))
-  (normal-top-level-add-subdirs-to-load-path)
-  (nconc load-path orig-load-path))
-
-
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
-
-
-
-(require 'editorconfig)
-
+(use-package yasnippet)
 (require 'yasnippet)
 (yas-global-mode 1)
 
@@ -55,15 +105,20 @@
 (require 'multi-term)
 (setq multi-term-program "/usr/local/bin/bash")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helm
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (require 'helm)
 ;; (require 'helm-config)
 ;; (global-set-key (kbd "M-x") 'helm-M-x)
 ;; ;;(global-set-key (kbd "C-x C-f") 'helm-find-files)
+;;(global-set-key (kbd "C-x f") 'helm-find)
 ;; (global-set-key (kbd "C-x C-f") 'find-file)
 ;; (helm-mode 1)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; tab bar?
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; source is under elpa directory, but I git cloned it myself.
 ;; (setq tabbar-ruler-global-tabbar t)    ; get tabbar
 ;; (setq tabbar-ruler-global-ruler nil)     ; get global ruler
@@ -79,23 +134,6 @@
 (setq magit-last-seen-setup-instructions "1.4.0")
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;; Themes n stuff
-;;(load-theme 'solarized-light t)
-;;(load-theme 'base16-tomorrow-dark t)
-;;(load-theme 'labburn t)
-(setq custom-safe-themes t)
-(load-theme 'spacemacs-dark)
-
-(load-file "~/.emacs.d/minibuf-electric-gnuemacs.el")
-
-;;mode line theming. I don't like anything yet
-;;(setq sml/no-confirm-load-theme t)
-;;(sml/setup)
-;;(sml/apply-theme 'automatic)
-;;(require 'powerline)
-(require 'spaceline-config)
-(spaceline-spacemacs-theme)
-
 
 
 ;; org mode stuff
@@ -103,30 +141,20 @@
 ;;(setq org-default-notes-file (concat org-directory "/captured_notes.org"))
 (define-key global-map "\C-cn" 'org-capture)
 
-;(require 'smooth-scrolling)
-(global-linum-mode 1)
-(global-hl-line-mode 1)
 
-(global-visual-line-mode 1)
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq inhibit-startup-message t)
-
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(setq require-final-newline t)
-
-(setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-    '(("." . "~/.saves"))    ; don't litter my fs tree
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; to see webdev2 at PMACS
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun connect-webdev2 ()
   "Use tramp to get to webdev2."
   (interactive)
   (dired "/timand@webdev2.med.upenn.edu:~"))
+
+;;;; we are on a mac:
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
+
 
 (add-hook 'after-init-hook 'global-company-mode)
 
@@ -169,7 +197,18 @@
 
 (use-package projectile-rails)
 (projectile-rails-global-mode)
+
 (setq projectile-enable-caching t)
+
+
+;; asks for file to open when project is switched
+(setq projectile-switch-project-action 'helm-projectile-find-file)
+
+;; turns on helm bindings for projectile
+(helm-projectile-on)
+
+
+(require 'rspec-mode)
 
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
@@ -184,7 +223,9 @@
 ;; another option
 ;;(require 'projectile-speedbar)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fonts (use one of the below)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (when (member "Source Code Pro" (font-family-list))
 ;;   (set-face-attribute 'default nil :font "Source Code Pro-12"))
 
@@ -194,17 +235,19 @@
 (when (member "PragmataPro" (font-family-list))
   (set-face-attribute 'default nil :font "PragmataPro-14"))
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; javascript stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
 (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))
 
 
-;;(eval-after-load "sql"
-;;  '(load-library "sql-indent"))
-
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   THE END. CUSTOMIZE WRITES THE REST ON ITS OWN    ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 (custom-set-variables
@@ -212,6 +255,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   (vector "#ffffff" "#ff9da4" "#d1f1a9" "#ffeead" "#bbdaff" "#ebbbff" "#99ffff" "#003f8e"))
  '(ansi-term-color-vector
    [unspecified "#061229" "#d07346" "#99bf52" "#fbd461" "#5299bf" "#9989cc" "#5299bf" "#b8bbc2"] t)
  '(apropos-do-all t)
@@ -222,7 +269,7 @@
  '(cua-normal-cursor-color "#657b83")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
- '(custom-enabled-themes (quote (sanityinc-tomorrow-blue)))
+ '(custom-enabled-themes (quote (pastelmac)))
  '(custom-safe-themes t)
  '(desktop-save-mode nil)
  '(diary-entry-marker (quote font-lock-variable-name-face))
@@ -327,7 +374,7 @@ static char *gnus-pointer[] = {
  '(org-mobile-inbox-for-pull "~/orgmode/from-mobile.org")
  '(package-selected-packages
    (quote
-    (which-key use-package el-get alect-themes sql-indent format-sql sqlup-mode e2ansi multi-term anzu slack spaceline moe-theme smart-mode-line-powerline-theme exec-path-from-shell helm-flycheck osx-plist ruby-refactor spotlight farmhouse-theme majapahit-theme dakrone-theme hydandata-light-theme spacemacs-theme labburn-theme helm-projectile helm-ag helm-descbinds helm-ls-git helm-smex smex async company-statistics dash helm-company hydra rich-minority yasnippet bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
+    (paper-theme pastelmac-theme yafolding which-key use-package el-get alect-themes sql-indent format-sql sqlup-mode e2ansi multi-term anzu slack spaceline moe-theme smart-mode-line-powerline-theme exec-path-from-shell helm-flycheck osx-plist ruby-refactor spotlight farmhouse-theme majapahit-theme dakrone-theme hydandata-light-theme spacemacs-theme labburn-theme helm-projectile helm-ag helm-descbinds helm-ls-git helm-smex smex async company-statistics dash helm-company hydra rich-minority yasnippet bundler company-flx company-shell ido-vertical-mode js2-mode paradox rubocop ppd-sr-speedbar project-persist project-persist-drawer yaml-mode web-mode vagrant-tramp vagrant steady-theme sr-speedbar solarized-theme smooth-scrolling smart-tabs-mode smart-mode-line rspec-mode robe reveal-in-osx-finder rbenv rails-log-mode projectile-rails project-explorer php-auto-yasnippets org-plus-contrib omniref neotree markdown-mode magit-filenotify lenlen-theme launchctl iplayer highlight-current-line guide-key go-mode gitlab gitignore-mode gitconfig-mode git-gutter+ ggtags flycheck flx-ido ember-mode editorconfig company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode base16-theme auto-compile ag abc-mode)))
  '(paradox-github-token t)
  '(php-file-patterns
    (quote
@@ -337,11 +384,15 @@ static char *gnus-pointer[] = {
  '(projectile-completion-system (quote ido))
  '(projectile-enable-caching t)
  '(projectile-use-git-grep t)
+ '(rspec-use-bundler-when-possible t)
+ '(rspec-use-rake-when-possible t)
+ '(rspec-use-spring-when-possible nil)
  '(save-place t nil (saveplace))
  '(savehist-mode t)
  '(show-paren-mode t)
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
  '(spaceline-helm-mode t)
+ '(split-height-threshold 25)
  '(sr-speedbar-delete-windows t)
  '(sr-speedbar-right-side nil)
  '(standard-indent 2)
@@ -381,14 +432,8 @@ static char *gnus-pointer[] = {
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(linum ((t (:background "#002451" :foreground "#7285b7" :underline nil :slant normal :height 0.8))))
  '(neo-banner-face ((t (:foreground "#93a1a1"))))
  '(neo-button-face ((t (:underline nil))))
- '(neo-dir-link-face ((t (:foreground "#268bd2" :height 1.0))))
- '(neo-expand-btn-face ((t (:foreground "#93a1a1" :height 1.0))))
- '(neo-file-link-face ((t (:foreground "#657b83"))))
- '(neo-header-face ((t (:foreground "#268bd2"))))
- '(neo-root-dir-face ((t (:foreground "#586e75" :weight bold))))
- '(web-mode-symbol-face ((t (:foreground "gold4")))))
+ '(neo-header-face ((t (:foreground "#268bd2")))))
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
