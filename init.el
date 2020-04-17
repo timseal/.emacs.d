@@ -372,8 +372,8 @@
 ;; (when (member "CamingoCode" (font-family-list))
 ;;   (set-face-attribute 'default nil :font "CamingoCode-12"))
 
-(when (member "PragmataPro" (font-family-list))
-  (set-face-attribute 'default nil :font "PragmataPro-12"))
+;;(when (member "PragmataPro" (font-family-list))
+;;  (set-face-attribute 'default nil :font "PragmataPro-12"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; javascript stuff
@@ -531,7 +531,7 @@ static char *gnus-pointer[] = {
    '("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4"))
  '(ns-alternate-modifier '(:ordinary meta :function alt :mouse alt))
  '(objed-cursor-color "#e45649")
- '(org-agenda-files '("~/orgmode/worklog.org"))
+ '(org-agenda-files '("~/orgmode/worklog.org") t)
  '(org-capture-templates
    '(("n" "item" item
       (file "~/orgmode/captured_notes.org")
@@ -650,6 +650,9 @@ static char *gnus-pointer[] = {
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#F5F5F9" :foreground "#0F1019" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "nil" :family "PragmataPro Liga"))))
+ '(fixed-pitch ((t (:family "PragmataPro Liga"))))
+ '(fixed-pitch-serif ((t (:family "PragmataPro Liga"))))
  '(neo-banner-face ((t (:foreground "#93a1a1"))))
  '(neo-button-face ((t (:underline nil))))
  '(neo-header-face ((t (:foreground "#268bd2")))))
