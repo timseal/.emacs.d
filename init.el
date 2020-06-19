@@ -43,7 +43,10 @@
                      markdown-mode
                      markdown-preview-mode
                      which-key
-                     smartparens))
+                     smartparens
+		     modus-operandi-theme
+		     modus-vivendi-theme
+		     ))
 
                                         ; install the missing packages
 (dolist (package package-list)
@@ -129,6 +132,7 @@
 ;;(load-theme 'spacemacs-dark)
 ;;(load-theme 'pastelmac)
 
+
 ;;; solaire mode makes file-visiting windows a bit brighter
 (solaire-global-mode +1)
 ;; if the bright and dark background colors are the wrong way around, use this
@@ -136,6 +140,27 @@
 ;; This should be used *after* you load the active theme!
 ;; NOTE: This is (allegedly) necessary for themes in the doom-themes package!
 (solaire-mode-swap-bg)
+
+
+(use-package modus-operandi-theme
+  :ensure t
+  :init
+  (setq modus-operandi-theme-slanted-constructs t
+        modus-operandi-theme-bold-constructs t
+        modus-operandi-theme-visible-fringes t
+        modus-operandi-theme-3d-modeline t
+        modus-operandi-theme-subtle-diffs t
+        modus-operandi-theme-distinct-org-blocks t
+        modus-operandi-theme-proportional-fonts t
+        modus-operandi-theme-rainbow-headings t
+        modus-operandi-theme-section-headings t
+        modus-operandi-theme-scale-headings t
+        modus-operandi-theme-scale-1 1.05
+        modus-operandi-theme-scale-2 1.1
+        modus-operandi-theme-scale-3 1.15
+        modus-operandi-theme-scale-4 1.2)
+  :config
+  (load-theme 'modus-operandi t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Doom themes, https://github.com/hlissner/emacs-doom-themes
@@ -145,7 +170,7 @@
       doom-themes-enable-italic t) ; if nil, italics is universally disabled
 ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
 ;; may have their own settings.
-(load-theme 'doom-nord-light t)
+;;(load-theme 'doom-nord-light t)
 ;; Enable custom neotree theme (all-the-icons must be installed!)
 ;;(doom-themes-neotree-config)
 ;; or for treemacs users
@@ -155,9 +180,9 @@
 (doom-themes-org-config)
 ;;(let ((height (face-attribute 'default :height)))
 ;;  (set-face-attribute 'linum nil :height height))
-(use-package doom-modeline
-  :ensure t
-  :hook (after-init . doom-modeline-mode))
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :hook (after-init . doom-modeline-mode))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -584,14 +609,51 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
  '(blink-cursor-mode nil)
+ '(custom-enabled-themes (quote (doom-nord-light)))
+ '(flymake-error-bitmap
+   (quote
+    (flymake-double-exclamation-mark modus-theme-fringe-red)))
+ '(flymake-note-bitmap (quote (exclamation-mark modus-theme-fringe-cyan)))
+ '(flymake-warning-bitmap (quote (exclamation-mark modus-theme-fringe-yellow)))
+ '(hl-sexp-background-color "#33323e")
+ '(hl-todo-keyword-faces
+   (quote
+    (("HOLD" . "#714900")
+     ("TODO" . "#721045")
+     ("NEXT" . "#5317ac")
+     ("THEM" . "#8f0075")
+     ("PROG" . "#005589")
+     ("OKAY" . "#185870")
+     ("DONT" . "#4a5700")
+     ("FAIL" . "#a80000")
+     ("DONE" . "#005200")
+     ("NOTE" . "#804000")
+     ("KLUDGE" . "#8b3800")
+     ("HACK" . "#8b3800")
+     ("TEMP" . "#4d0006")
+     ("FIXME" . "#9d2020")
+     ("XXX+" . "#880000")
+     ("REVIEW" . "#005a68")
+     ("DEPRECATED" . "#001170"))))
+ '(ibuffer-deletion-face (quote dired-flagged))
+ '(ibuffer-filter-group-name-face (quote dired-mark))
+ '(ibuffer-marked-face (quote dired-marked))
+ '(ibuffer-title-face (quote dired-header))
  '(mac-command-modifier (quote hyper))
  '(mac-option-modifier (quote meta))
  '(package-selected-packages
    (quote
-    (which-key use-package treemacs-magit treemacs-icons-dired solaire-mode smartparens ruby-electric rbenv projectile-rails pastelmac-theme nord-theme markdown-preview-mode leuven-theme gitconfig-mode doom-themes doom-modeline diredfl challenger-deep-theme centaur-tabs base16-theme)))
+    (php-mode modus-vivendi-theme modus-operandi-theme which-key use-package treemacs-magit treemacs-icons-dired solaire-mode smartparens ruby-electric rbenv projectile-rails pastelmac-theme nord-theme markdown-preview-mode leuven-theme gitconfig-mode doom-themes doom-modeline diredfl challenger-deep-theme centaur-tabs base16-theme)))
  '(show-paren-mode t)
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ '(vc-annotate-background-mode nil)
+ '(xterm-color-names
+   ["#000000" "#a80000" "#005200" "#8b3800" "#0030a6" "#721045" "#005589" "#f3f1f3"])
+ '(xterm-color-names-bright
+   ["#505050" "#880000" "#4a5700" "#714900" "#223fbf" "#8f0075" "#185870" "#ffffff"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
